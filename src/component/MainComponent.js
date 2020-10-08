@@ -28,28 +28,22 @@ class Main extends Component {
     let totalPage = Math.ceil(this.state.contacts.length / dataPerPage);
 
     if (pageNumber <= totalPage && pageNumber > 0) {
-      this.setState({ lastPage: totalPage }, () =>
-        console.log(this.state.lastPage)
-      );
+      this.setState({ lastPage: totalPage });
       let endIndex = pageNumber * dataPerPage;
       let startIndex = endIndex - dataPerPage;
       let totalData = this.state.contacts;
-      console.log(totalData);
       let currentPageData = totalData.slice(startIndex, endIndex);
 
-      this.setState({ currentPageData: currentPageData }, () =>
-        console.log(this.state.currentPageData)
-      );
+      this.setState({ currentPageData: currentPageData });
 
       this.setState({ currentPage: pageNumber });
     }
+
   }
 
   componentDidMount() {
     axios.get(apiUrl + "contact").then((res) => {
-      this.setState({ contacts: res.data }, () =>
-        console.log(this.state.contacts)
-      );
+      this.setState({ contacts: res.data });
       this.handlePagination(1);
     });
   }
@@ -91,17 +85,17 @@ class Main extends Component {
         if(this.state.currentPage=== 1 ){
           return (
             <Pagination aria-label="Page navigation example">
-            <Link to={`/${1}`}>
+            <Link to={`/pages/${1}`}>
               <PaginationItem   onClick={() => this.handlePagination(1)}>
                 <PaginationLink first />
               </PaginationItem>
             </Link>
-            <Link to={`/${1}`} >
+            <Link to={`/pages/${1}`} >
               <PaginationItem disabled onClick={() => this.handlePagination(this.state.currentPage)}>
                 <PaginationLink previous />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage}`}>
+            <Link to={`/pages/${this.state.currentPage}`}>
               <PaginationItem
                 active
                 onClick={() => this.handlePagination(this.state.currentPage)}
@@ -109,12 +103,12 @@ class Main extends Component {
                 <PaginationLink>{this.state.currentPage}</PaginationLink>
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage+1}`}>
+            <Link to={`/pages/${this.state.currentPage+1}`}>
               <PaginationItem  onClick={() => this.handlePagination(this.state.currentPage +1)}>
                 <PaginationLink next />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.lastPage}`}>
+            <Link to={`/pages/${this.state.lastPage}`}>
               <PaginationItem onClick={() => this.handlePagination(this.state.lastPage)}>
                 <PaginationLink last />
               </PaginationItem>
@@ -126,17 +120,17 @@ class Main extends Component {
         else if(this.state.currentPage=== this.state.lastPage ){
           return (
             <Pagination aria-label="Page navigation example">
-            <Link to={`/${1}`}>
+            <Link to={`/pages/${1}`}>
               <PaginationItem   onClick={() => this.handlePagination(1)}>
                 <PaginationLink first />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage -1}`} >
+            <Link to={`/pages/${this.state.currentPage -1}`} >
               <PaginationItem  onClick={() => this.handlePagination(this.state.currentPage -1 )}>
                 <PaginationLink previous />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage}`}>
+            <Link to={`/pages/${this.state.currentPage}`}>
               <PaginationItem
                 active
                 onClick={() => this.handlePagination(this.state.currentPage)}
@@ -144,12 +138,12 @@ class Main extends Component {
                 <PaginationLink>{this.state.currentPage}</PaginationLink>
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage}`}>
+            <Link to={`/pages/${this.state.currentPage}`}>
               <PaginationItem disabled  onClick={() => this.handlePagination(this.state.currentPage )}>
                 <PaginationLink next />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.lastPage}`}>
+            <Link to={`/pages/${this.state.lastPage}`}>
               <PaginationItem onClick={() => this.handlePagination(this.state.lastPage)}>
                 <PaginationLink last />
               </PaginationItem>
@@ -160,30 +154,30 @@ class Main extends Component {
         else{
           return(
             <Pagination aria-label="Page navigation example">
-            <Link to={`/${1}`}>
+            <Link to={`/pages/${1}`}>
               <PaginationItem   onClick={() => this.handlePagination(1)}>
                 <PaginationLink first />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage-1}`}>
-              <PaginationItem onClick={() => this.handlePagination(this.state.currentPage -1)}>
+            <Link to={`/pages/${parseInt( this.props.match.params.id)-1}`}>
+              <PaginationItem onClick={() => this.handlePagination(parseInt( this.props.match.params.id) -1)}>
                 <PaginationLink previous />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage}`}>
+            <Link to={`/pages/${parseInt( this.props.match.params.id)}`}>
               <PaginationItem
                 active
-                onClick={() => this.handlePagination(this.state.currentPage)}
+                onClick={() => this.handlePagination(parseInt( this.props.match.params.id))}
               >
-                <PaginationLink>{this.state.currentPage}</PaginationLink>
+                <PaginationLink>{parseInt( this.props.match.params.id)}</PaginationLink>
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.currentPage+1}`}>
-              <PaginationItem  onClick={() => this.handlePagination(this.state.currentPage +1)}>
+            <Link to={`/pages/${parseInt( this.props.match.params.id)+1}`}>
+              <PaginationItem  onClick={() => this.handlePagination(parseInt( this.props.match.params.id) +1)}>
                 <PaginationLink next />
               </PaginationItem>
             </Link>
-            <Link to={`/${this.state.lastPage}`}>
+            <Link to={`/pages/${this.state.lastPage}`}>
               <PaginationItem onClick={() => this.handlePagination(this.state.lastPage)}>
                 <PaginationLink last />
               </PaginationItem>

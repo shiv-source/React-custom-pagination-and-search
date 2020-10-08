@@ -1,0 +1,10 @@
+span.fa.fa-spinner.fa-pulse.fa-3x.fa-fw.text-primary {
+    font-size: 500%;
+   
+}
+
+.loadingSpinner{
+    position: relative;
+    top: 100px;
+    left: 475px;
+}

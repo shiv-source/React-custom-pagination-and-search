@@ -62,19 +62,22 @@ class Main extends Component {
   }
 
   handleSubmit(value) {
-    alert(JSON.stringify(value));
-    // axios.post("http://localhost:3001/contacts", value).then((res) => {
-    //   let previousContacts = [...this.state.contacts];
-    //   previousContacts.push(res.data);
-    //   this.setState({ contacts: previousContacts });
-    //   this.setState({ isModelOpen: false });
-    // //changes reflected on current page on the basis of response catching no need to fetch data again.
-    //   let previouscurrentPageData = [...this.state.currentPageData];
-    //   previouscurrentPageData.push(res.data);
-    //   this.setState({ currentPageData: previouscurrentPageData });
+    this.setState({ isModelOpen: false });
+    axios
+      .post(apiUrl +  "contact", value)
+      .then((res) => {
+        let previousContacts = [...this.state.contacts];
+        previousContacts.push(res.data);
+        this.setState({ contacts: previousContacts });
+        //this.setState({ isModelOpen: false });
+        //changes reflected on current page on the basis of response catching no need to fetch data again.
+        let previouscurrentPageData = [...this.state.currentPageData];
+        previouscurrentPageData.push(res.data);
+        this.setState({ currentPageData: previouscurrentPageData });
+       alert("Your Contacts list Added successfully");
 
-    //   alert("Your Contacts list Added successfully");
-    // });
+      } )
+      .catch((err) => console.log(err));
   }
 
   componentDidMount() {
@@ -89,9 +92,11 @@ class Main extends Component {
     const loading = () => {
       let isLoading = this.state.isLoading;
       if (isLoading) {
-        return <RenderLoader />;
+        return (
+            <RenderLoader />
+        );
       } else {
-        return <div></div>;
+        return (<div></div>);
       }
     };
 
@@ -385,20 +390,22 @@ class Main extends Component {
               </ModalBody>
             </Modal>
           </div>
-          <Table hover={true} className="mt-3">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email ID</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>{renderTableData()}</tbody>
-            {loading()}
-          </Table>
+          <div>
+            <Table hover={true} className="mt-3">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email ID</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>{renderTableData()}</tbody>
+              {loading()}
+            </Table>
+          </div>
         </div>
       </div>
     );

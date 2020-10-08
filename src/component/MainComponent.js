@@ -38,6 +38,7 @@ class Main extends Component {
     };
     this.handlePagination = this.handlePagination.bind(this);
     this.toggleModel = this.toggleModel.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handlePagination(pageNumber) {
@@ -80,6 +81,30 @@ class Main extends Component {
       .catch((err) => console.log(err));
   }
 
+
+  handleDelete(contact){
+    console.log(contact)
+
+    axios.delete( apiUrl + "contact/" + contact.id).then((res) => {
+      if (res) {
+        console.log(res);
+        let newData = this.state.contacts.filter(
+          (data) => data.id !== contact.id
+        );
+        this.setState({ contacts: newData }, () => {
+          //changes reflected on current page on the basis of response catching no need to fetch data again.
+          let newCurrentData = this.state.currentPageData.filter(
+            (data) => data.id !== contact.id
+          );
+          this.setState({ currentPageData: newCurrentData });
+          // alert("Selected contact data deletd successfully")
+        })
+      }
+    });
+
+
+  }
+
   componentDidMount() {
     axios.get(apiUrl + "contact").then((res) => {
       this.setState({ contacts: res.data });
@@ -117,7 +142,7 @@ class Main extends Component {
                   ></i>
                 </span>
               </td>
-              <td>
+              <td onClick={ () => this.handleDelete(contact) }>
                 <span style={{ color: "red" }}>
                   <i className="fa fa-trash fa-lg" aria-hidden="true"></i>
                 </span>

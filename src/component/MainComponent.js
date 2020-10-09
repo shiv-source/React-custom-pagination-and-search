@@ -38,10 +38,13 @@ class Main extends Component {
       currentPageData: [],
       isModelOpen: false,
       isLoading: true,
+      searchInput: "",
+      totalSearchResult: null,
     };
     this.handlePagination = this.handlePagination.bind(this);
     this.toggleModel = this.toggleModel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handlePagination(pageNumber) {
@@ -102,6 +105,26 @@ class Main extends Component {
         });
       }
     });
+  }
+
+  handleChange(event) {
+    this.setState({ searchInput: event.target.value }, () => {
+      this.search();
+    });
+  }
+
+  search() {
+    let searchInput = this.state.searchInput;
+    let totalData = this.state.contacts;
+    let filteredData = totalData.filter((value) => {
+      return (
+        value.firstname.toLowerCase().includes(searchInput.toLowerCase()) ||
+        value.lastname.toLowerCase().includes(searchInput.toLowerCase()) ||
+        value.email.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    });
+    this.setState({ currentPageData: filteredData });
+    this.setState({ totalSearchResult: filteredData.length });
   }
 
   componentDidMount() {
@@ -300,22 +323,23 @@ class Main extends Component {
               <div className="Pagination">{renderPagination()}</div>
             </Col>
             <Col>
-              <Form>
-                <FormGroup row>
-                  <Label for="serach" sm={2}>
-                    <b style={{ color: "green" }}>Search </b>
-                  </Label>
-                  <Col>
-                    <Input
-                      type="text"
-                      name="search"
-                      id="search"
-                      placeholder="Serach Here..."
-                    />
-                  </Col>
-                </FormGroup>
-              </Form>
+              <FormGroup row>
+                <Label for="serach" sm={2}>
+                  <b style={{ color: "green" }}>Search </b>
+                </Label>
+                <Col>
+                  <Input
+                    type="text"
+                    name="search"
+                    id="search"
+                    placeholder="Serach Here..."
+                    value={this.state.searchInput}
+                    onChange={this.handleChange}
+                  />
+                </Col>
+              </FormGroup>
             </Col>
+
             <Col>
               <div className="text-right">
                 <Button color="primary" onClick={this.toggleModel}>

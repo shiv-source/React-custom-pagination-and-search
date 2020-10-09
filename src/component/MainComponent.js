@@ -105,7 +105,7 @@ class Main extends Component {
             (data) => data.id !== contact.id
           );
           this.setState({ currentPageData: newCurrentData });
-          // alert("Selected contact data deletd successfully")
+          alert("Selected contact data deletd successfully")
         });
       }
     }).catch( (err) =>console.log(err))

@@ -104,7 +104,7 @@ class Main extends Component {
           // alert("Selected contact data deletd successfully")
         });
       }
-    });
+    }).catch( (err) =>console.log(err))
   }
 
   handleChange(event) {
@@ -115,16 +115,23 @@ class Main extends Component {
 
   search() {
     let searchInput = this.state.searchInput;
-    let totalData = this.state.contacts;
-    let filteredData = totalData.filter((value) => {
-      return (
-        value.firstname.toLowerCase().includes(searchInput.toLowerCase()) ||
-        value.lastname.toLowerCase().includes(searchInput.toLowerCase()) ||
-        value.email.toLowerCase().includes(searchInput.toLowerCase())
-      );
-    });
-    this.setState({ currentPageData: filteredData });
-    this.setState({ totalSearchResult: filteredData.length });
+    if(searchInput){
+      let totalData = this.state.contacts;
+      let filteredData = totalData.filter((value) => {
+        return (
+          value.firstname.toLowerCase().includes(searchInput.toLowerCase()) ||
+          value.lastname.toLowerCase().includes(searchInput.toLowerCase()) ||
+          value.email.toLowerCase().includes(searchInput.toLowerCase())
+        );
+      });
+      this.setState({ currentPageData: filteredData });
+      this.setState({ totalSearchResult: filteredData.length });
+      console.log(filteredData.length);
+    }
+    else{
+      this.setState({ totalSearchResult: null });
+    }
+
   }
 
   componentDidMount() {
@@ -144,6 +151,20 @@ class Main extends Component {
         return <div></div>;
       }
     };
+
+    const totalSearchResults = () => {
+      let results = this.state.totalSearchResult;
+      if(results==null){
+        return(<div></div>)
+      }
+      else{
+        return(
+          <div>
+             <h6 style={{ color: "red" }}>{results} Results Found </h6>
+          </div>
+        )
+      }
+    }
 
     const renderTableData = () => {
       return this.state.currentPageData.map((contact) => {
@@ -319,10 +340,10 @@ class Main extends Component {
         <div>
           <h2 className="text-center mt-1"> Contact List </h2>
           <Row>
-            <Col>
+            <Col sm={4}>
               <div className="Pagination">{renderPagination()}</div>
             </Col>
-            <Col>
+            <Col sm={4}>
               <FormGroup row>
                 <Label for="serach" sm={2}>
                   <b style={{ color: "green" }}>Search </b>
@@ -339,8 +360,10 @@ class Main extends Component {
                 </Col>
               </FormGroup>
             </Col>
-
-            <Col>
+            <Col sm={2}>
+             {totalSearchResults()}
+            </Col>
+            <Col sm={2}>
               <div className="text-right">
                 <Button color="primary" onClick={this.toggleModel}>
                   <span>

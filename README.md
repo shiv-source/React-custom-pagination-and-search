@@ -1,3 +1,9 @@
+
+![alt text](https://raw.githubusercontent.com/shiv-source/React-custom-pagination-and-search/master/video/custom_pagination_and_search.gif)
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

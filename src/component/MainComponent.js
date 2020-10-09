@@ -11,6 +11,9 @@ import {
   Row,
   Col,
   Label,
+  Form,
+  Input,
+  FormGroup,
 } from "reactstrap";
 import { apiUrl } from "../config/apiUrl";
 import axios from "axios";
@@ -65,7 +68,7 @@ class Main extends Component {
   handleSubmit(value) {
     this.setState({ isModelOpen: false });
     axios
-      .post(apiUrl +  "contact", value)
+      .post(apiUrl + "contact", value)
       .then((res) => {
         let previousContacts = [...this.state.contacts];
         previousContacts.push(res.data);
@@ -75,17 +78,15 @@ class Main extends Component {
         let previouscurrentPageData = [...this.state.currentPageData];
         previouscurrentPageData.push(res.data);
         this.setState({ currentPageData: previouscurrentPageData });
-       alert("Your Contacts list Added successfully");
-
-      } )
+        alert("Your Contacts list Added successfully");
+      })
       .catch((err) => console.log(err));
   }
 
+  handleDelete(contact) {
+    console.log(contact);
 
-  handleDelete(contact){
-    console.log(contact)
-
-    axios.delete( apiUrl + "contact/" + contact.id).then((res) => {
+    axios.delete(apiUrl + "contact/" + contact.id).then((res) => {
       if (res) {
         console.log(res);
         let newData = this.state.contacts.filter(
@@ -98,11 +99,9 @@ class Main extends Component {
           );
           this.setState({ currentPageData: newCurrentData });
           // alert("Selected contact data deletd successfully")
-        })
+        });
       }
     });
-
-
   }
 
   componentDidMount() {
@@ -117,11 +116,9 @@ class Main extends Component {
     const loading = () => {
       let isLoading = this.state.isLoading;
       if (isLoading) {
-        return (
-            <RenderLoader />
-        );
+        return <RenderLoader />;
       } else {
-        return (<div></div>);
+        return <div></div>;
       }
     };
 
@@ -142,7 +139,7 @@ class Main extends Component {
                   ></i>
                 </span>
               </td>
-              <td onClick={ () => this.handleDelete(contact) }>
+              <td onClick={() => this.handleDelete(contact)}>
                 <span style={{ color: "red" }}>
                   <i className="fa fa-trash fa-lg" aria-hidden="true"></i>
                 </span>
@@ -297,16 +294,39 @@ class Main extends Component {
     return (
       <div className="container">
         <div>
-          <h2 className="text-center"> Contact List </h2>
-          <div className="Pagination">{renderPagination()}</div>
-          <div className="text-right">
-            <Button color="primary" onClick={this.toggleModel}>
-              <span>
-                <i className="fa fa-plus fa-lg" aria-hidden="true"></i> Add
-                Contact
-              </span>
-            </Button>
-          </div>
+          <h2 className="text-center mt-1"> Contact List </h2>
+          <Row>
+            <Col>
+              <div className="Pagination">{renderPagination()}</div>
+            </Col>
+            <Col>
+              <Form>
+                <FormGroup row>
+                  <Label for="serach" sm={2}>
+                    <b style={{ color: "green" }}>Search </b>
+                  </Label>
+                  <Col>
+                    <Input
+                      type="text"
+                      name="search"
+                      id="search"
+                      placeholder="Serach Here..."
+                    />
+                  </Col>
+                </FormGroup>
+              </Form>
+            </Col>
+            <Col>
+              <div className="text-right">
+                <Button color="primary" onClick={this.toggleModel}>
+                  <span>
+                    <i className="fa fa-plus fa-lg" aria-hidden="true"></i> Add
+                    Contact
+                  </span>
+                </Button>
+              </div>
+            </Col>
+          </Row>
           <div>
             <Modal isOpen={this.state.isModelOpen} toggle={this.toggleModel}>
               <ModalHeader toggle={this.toggleModel}>

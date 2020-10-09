@@ -40,11 +40,15 @@ class Main extends Component {
       isLoading: true,
       searchInput: "",
       totalSearchResult: null,
+      isEditModelOpen:false,
+      selectedEditContact : null,
+
     };
     this.handlePagination = this.handlePagination.bind(this);
     this.toggleModel = this.toggleModel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
   }
 
   handlePagination(pageNumber) {
@@ -134,6 +138,33 @@ class Main extends Component {
 
   }
 
+
+  handleEdit(contact){
+    this.setState({isEditModelOpen : !this.state.isEditModelOpen} , () => console.log(this.state.isEditModelOpen))
+    this.setState({selectedEditContact : contact});
+  }
+
+
+  handleSubmitOfEditForm(value){
+    let selectedEditContact = this.state.selectedEditContact;
+    let id = selectedEditContact.id;
+    console.log(id);
+    let contacts = this.state.contacts;
+
+    axios.put(apiUrl + "contact/" + id , value )
+    .then( (res) => {
+      this.setState({isEditModelOpen : false})
+      alert(`Modified Successfully of data list id : ${id} `);
+      let initFiterData = contacts.filter( (val) => val.id !== id );
+      initFiterData.unshift(res.data);
+      console.log(initFiterData);
+      this.setState({contacts : initFiterData}, () => this.setState({ currentPageData : initFiterData }));
+    });
+
+    
+
+  }
+
   componentDidMount() {
     axios.get(apiUrl + "contact").then((res) => {
       this.setState({ contacts: res.data });
@@ -175,7 +206,7 @@ class Main extends Component {
               <td>{contact.firstname}</td>
               <td>{contact.lastname} </td>
               <td>{contact.email}</td>
-              <td>
+              <td onClick={() => this.handleEdit(contact)}>
                 <span style={{ color: "blue" }}>
                   <i
                     className="fa fa-pencil-square-o fa-lg"
@@ -374,7 +405,7 @@ class Main extends Component {
               </div>
             </Col>
           </Row>
-          <div>
+          <div className="addContactForm">
             <Modal isOpen={this.state.isModelOpen} toggle={this.toggleModel}>
               <ModalHeader toggle={this.toggleModel}>
                 <span className="fa fa-address-card fa-lg "></span> Contact
@@ -382,6 +413,114 @@ class Main extends Component {
               </ModalHeader>
               <ModalBody>
                 <LocalForm onSubmit={(value) => this.handleSubmit(value)}>
+                  <Row>
+                    <Col>
+                      <Label htmlFor="firstname">First Name </Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Control.text
+                        model=".firstname"
+                        id="firstname"
+                        name="firstname"
+                        placeholder="First Name"
+                        className="form-control"
+                        validators={{
+                          required,
+                          minLength: minLength(3),
+                          maxLength: maxLength(15),
+                        }}
+                      />
+                      <Errors
+                        className="text-danger"
+                        model=".firstname"
+                        show="touched"
+                        messages={{
+                          required: "Required / ",
+                          minLength: "Must be greater than 2 characters",
+                          maxLength: "Must be 15 characters or less",
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col>
+                      <Label htmlFor="lastname">Last Name </Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Control.text
+                        model=".lastname"
+                        id="lastname"
+                        name="lastname"
+                        placeholder="First Name"
+                        className="form-control"
+                        validators={{
+                          required,
+                          minLength: minLength(3),
+                          maxLength: maxLength(15),
+                        }}
+                      />
+                      <Errors
+                        className="text-danger"
+                        model=".lastname"
+                        show="touched"
+                        messages={{
+                          required: "Required / ",
+                          minLength: "Must be greater than 2 characters",
+                          maxLength: "Must be 15 characters or less",
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col>
+                      <Label htmlFor="email">Email </Label>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Control.text
+                        model=".email"
+                        id="email"
+                        name="email"
+                        placeholder="Email"
+                        className="form-control"
+                        validators={{
+                          required,
+                          validEmail,
+                        }}
+                      />
+                      <Errors
+                        className="text-danger"
+                        model=".email"
+                        show="touched"
+                        messages={{
+                          required: "Required / ",
+                          validEmail: "Invalid Email Address",
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col>
+                      <Button color="primary">Submit </Button>
+                    </Col>
+                  </Row>
+                </LocalForm>
+              </ModalBody>
+            </Modal>
+          </div>
+          <div className="editForm">
+            <Modal isOpen={this.state.isEditModelOpen} toggle={this.handleEdit}>
+              <ModalHeader toggle={this.handleEdit}>
+                <span className="fa fa-address-card fa-lg "></span> Edit Contact
+                Details Form
+              </ModalHeader>
+              <ModalBody>
+                <LocalForm onSubmit={(value) => this.handleSubmitOfEditForm(value)}>
                   <Row>
                     <Col>
                       <Label htmlFor="firstname">First Name </Label>
